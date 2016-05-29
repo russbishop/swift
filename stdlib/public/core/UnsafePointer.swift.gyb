@@ -207,7 +207,8 @@ public struct ${Self}<Pointee>
   ///
   /// - Precondition: The `Pointee`s at `self..<self + count` and
   ///   `source..<source + count` are initialized.
-  public func assignFrom(_ source: ${Self}, count: Int) {
+  public func assignFrom(_ source: UnsafePointer<Pointee>, count: Int) {
+    let source = ${Self}(source)
     _debugPrecondition(
       count >= 0, "${Self}.assignFrom with negative count")
     _debugPrecondition(
@@ -232,7 +233,8 @@ public struct ${Self}<Pointee>
   ///
   /// - Precondition: The `Pointee`s at `self..<self + count` and
   ///   `source..<source + count` are initialized.
-  public func assignBackwardFrom(_ source: ${Self}, count: Int) {
+  public func assignBackwardFrom(_ source: UnsafePointer<Pointee>, count: Int) {
+    let source = ${Self}(source)
     _debugPrecondition(
       count >= 0, "${Self}.assignBackwardFrom with negative count")
     _debugPrecondition(
@@ -324,7 +326,8 @@ public struct ${Self}<Pointee>
   ///
   /// - Postcondition: The `Pointee`s at `self..<self + count` and
   ///   `source..<source + count` are initialized.
-  public func initializeFrom(_ source: ${Self}, count: Int) {
+  public func initializeFrom(_ source: UnsafePointer<Pointee>, count: Int) {
+    let source = ${Self}(source)
     _debugPrecondition(
       count >= 0, "${Self}.initializeFrom with negative count")
     _debugPrecondition(
