@@ -1615,6 +1615,24 @@ self.test("\(testNamePrefix).dropLast/semantics/negative") {
 }
 
 //===----------------------------------------------------------------------===//
+// drop(while:)
+//===----------------------------------------------------------------------===//
+
+self.test("\(testNamePrefix).drop(while:)/semantics") {
+  for test in findTests {
+    let s = makeWrappedSequenceWithEquatableElement(test.sequence)
+    let closureLifetimeTracker = LifetimeTracked(0)
+    let remainingSequence = s.drop {
+      _blackHole(closureLifetimeTracker)
+      return $0 == wrapValueIntoEquatable(test.element)
+    }
+    let remaining = Array(remainingSequence)
+    expectEqual(test.expectedLeftoverSequence.count, remaining.count)
+    expectEqualSequence(test.expectedLeftoverSequence, remaining)
+  }
+}
+
+//===----------------------------------------------------------------------===//
 // prefix()
 //===----------------------------------------------------------------------===//
 
@@ -1651,6 +1669,25 @@ self.test("\(testNamePrefix).prefix/semantics/negative") {
   let s = makeWrappedSequence([1010, 2020, 3030].map(OpaqueValue.init))
   expectCrashLater()
   _ = s.prefix(-1)
+}
+
+//===----------------------------------------------------------------------===//
+// prefix(while:)
+//===----------------------------------------------------------------------===//
+
+self.test("\(testNamePrefix).prefix(while:)/semantics") {
+  for test in findTests {
+    let s = makeWrappedSequenceWithEquatableElement(test.sequence)
+    let closureLifetimeTracker = LifetimeTracked(0)
+    let remainingSequence = s.prefix {
+      _blackHole(closureLifetimeTracker)
+      return $0 == wrapValueIntoEquatable(test.element)
+    }
+    let expectedPrefix = test.sequence.dropLast(expectedLeftoverSequence.count)
+    let remaining = Array(remainingSequence)
+    expectEqual(expectedPrefix.count, remaining.count)
+    expectEqualSequence(expectedPrefix, remaining)
+  }
 }
 
 //===----------------------------------------------------------------------===//

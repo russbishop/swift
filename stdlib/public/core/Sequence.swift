@@ -470,6 +470,17 @@ public protocol Sequence {
   ///
   /// - Complexity: O(*n*), where *n* is the length of the sequence.
   func dropLast(_ n: Int) -> SubSequence
+  
+
+  /// Returns a subsequence by skipping elements while `predicate` returns
+  /// `true` and returning the remaining elements.
+  ///
+  /// - Parameter while: A closure that takes an element of the
+  ///   sequence as its argument and returns a Boolean value indicating
+  ///   whether the element is a match.
+  func drop(
+    while predicate: @noescape (Iterator.Element) throws -> Bool
+  ) rethrows -> SubSequence
 
   /// Returns a subsequence, up to the specified maximum length, containing
   /// the initial elements of the sequence.
@@ -488,6 +499,16 @@ public protocol Sequence {
   /// - Returns: A subsequence starting at the beginning of this sequence
   ///   with at most `maxLength` elements.
   func prefix(_ maxLength: Int) -> SubSequence
+  
+  /// Returns a subsequence containing the initial elements until `predicate`
+  /// returns `false` and skipping the remaining elements.
+  ///
+  /// - Parameter while: A closure that takes an element of the
+  ///   sequence as its argument and returns a Boolean value indicating
+  ///   whether the element is a match.
+  func prefix(
+    while predicate: @noescape (Iterator.Element) throws -> Bool
+  ) rethrows -> SubSequence
 
   /// Returns a subsequence, up to the given maximum length, containing the
   /// final elements of the sequence.
@@ -1126,6 +1147,31 @@ extension Sequence where
     }
     return AnySequence(result)
   }
+  
+  /// Returns a subsequence by skipping elements while `predicate` returns
+  /// `true` and returning the remaining elements.
+  ///
+  /// - Parameter while: A closure that takes an element of the
+  ///   sequence as its argument and returns `true` if the element should
+  ///		be skipped or `false` if it should be included. Once the predicate
+  ///		returns `false` it will not be called again.
+  public func drop(
+    while predicate: @noescape (Iterator.Element) throws -> Bool
+  ) rethrows -> AnySequence<Iterator.Element> {
+    var iterator = makeIterator()
+    var nextElement: Iterator.Element? = iterator.next()
+    repeat {
+      nextElement = iterator.next()
+    } while try nextElement.flatMap(predicate) == true
+
+    return AnySequence {
+      AnyIterator {
+        guard let next = nextElement else { return nil }
+        nextElement = iterator.next()
+        return next
+      }
+    }
+  }
 
   /// Returns a subsequence, up to the specified maximum length, containing the
   /// initial elements of the sequence.
@@ -1152,6 +1198,27 @@ extension Sequence where
     }
     return AnySequence(
       _PrefixSequence(_iterator: makeIterator(), maxLength: maxLength))
+  }
+  
+  /// Returns a subsequence containing the initial elements until `predicate`
+  /// returns `false` and skipping the remaining elements.
+  ///
+  /// - Parameter while: A closure that takes an element of the
+  ///   sequence as its argument and returns `true` if the element should
+  ///		be included or `false` if it should be excluded. Once the predicate
+  ///		returns `false` it will not be called again.
+  public func prefix(
+    while predicate: @noescape (Iterator.Element) throws -> Bool
+  ) rethrows -> AnySequence<Iterator.Element> {
+    var result: [Iterator.Element] = []
+
+    for element in self {
+      guard try predicate(element) else {
+        break
+      }
+      result.append(element)
+    }
+    return AnySequence(result)
   }
 }
 
