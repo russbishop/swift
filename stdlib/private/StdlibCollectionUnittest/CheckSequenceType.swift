@@ -459,26 +459,24 @@ public let findTests = [
   FindTest(
     expected: nil,
     element: 42,
+    sequelement: 4040,
     sequence: [ 1010, 2020, 3030, 4040 ],
     expectedLeftoverSequence: []),
-  FindTest(
-    expected: 0,
-    element: 1010,
-    sequence: [ 1010, 2020, 3030, 4040 ],
-    expectedLeftoverSequence: [ 2020, 3030, 4040 ]),
+
   FindTest(
     expected: 1,
     element: 2020,
-    sequence: [ 1010, 2020, 3030, 4040 ],
-    expectedLeftoverSequence: [ 3030, 4040 ]),
-  FindTest(
-    expected: 2,
-    element: 3030,
-    sequence: [ 1010, 2020, 3030, 4040 ],
-    expectedLeftoverSequence: [ 4040 ]),
-  FindTest(
-    expected: 3,
-    element: 4040,
+    sequence: [ 1010, 2020, 3030, 2020, 4040 ],
+    expectedLeftoverSequence: [ 3030, 2020, 4040 ]),
+]
+
+/// For a number of form `NNN_MMM`, returns an array of `NNN` numbers that all
+/// have `MMM` as their last three digits.
+func flatMapTransformation(_ x: Int) -> [Int32] {
+  let repetitions = x / 1000
+  let identity = x % 1000
+  let range = (1..<(repetitions+1))
+  retulement: 4040,
     sequence: [ 1010, 2020, 3030, 4040 ],
     expectedLeftoverSequence: []),
 
@@ -1615,6 +1613,24 @@ self.test("\(testNamePrefix).dropLast/semantics/negative") {
 }
 
 //===----------------------------------------------------------------------===//
+// drop(while:)
+//===----------------------------------------------------------------------===//
+
+self.test("\(testNamePrefix).drop(while:)/semantics") {
+  for test in findTests {
+    let s = makeWrappedSequenceWithEquatableElement(test.sequence)
+    let closureLifetimeTracker = LifetimeTracked(0)
+    let remainingSequence = s.drop {
+      _blackHole(closureLifetimeTracker)
+      return $0 == wrapValueIntoEquatable(test.element)
+    }
+    let remaining = Array(remainingSequence)
+    expectEqual(test.expectedLeftoverSequence.count, remaining.count)
+    expectEqualSequence(test.expectedLeftoverSequence, remaining)
+  }
+}
+
+//===----------------------------------------------------------------------===//
 // prefix()
 //===----------------------------------------------------------------------===//
 
@@ -1651,6 +1667,25 @@ self.test("\(testNamePrefix).prefix/semantics/negative") {
   let s = makeWrappedSequence([1010, 2020, 3030].map(OpaqueValue.init))
   expectCrashLater()
   _ = s.prefix(-1)
+}
+
+//===----------------------------------------------------------------------===//
+// prefix(while:)
+//===----------------------------------------------------------------------===//
+
+self.test("\(testNamePrefix).prefix(while:)/semantics") {
+  for test in findTests {
+    let s = makeWrappedSequenceWithEquatableElement(test.sequence)
+    let closureLifetimeTracker = LifetimeTracked(0)
+    let remainingSequence = s.prefix {
+      _blackHole(closureLifetimeTracker)
+      return $0 == wrapValueIntoEquatable(test.element)
+    }
+    let expectedPrefix = test.sequence.dropLast(expectedLeftoverSequence.count)
+    let remaining = Array(remainingSequence)
+    expectEqual(expectedPrefix.count, remaining.count)
+    expectEqualSequence(expectedPrefix, remaining)
+  }
 }
 
 //===----------------------------------------------------------------------===//
