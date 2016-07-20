@@ -63,6 +63,7 @@
         "Filter.swift",
         "Reverse.swift",
         "Slice.swift",
+        "While.swift",
         "SequenceWrapper.swift",
         "LazyCollection.swift",
         "LazySequence.swift"],

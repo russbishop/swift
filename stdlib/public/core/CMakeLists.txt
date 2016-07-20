@@ -121,6 +121,7 @@ set(SWIFTLIB_ESSENTIAL
   UnsafeBitMap.swift
   UnsafeBufferPointer.swift.gyb
   UnsafePointer.swift.gyb
+  While.swift.gyb
   WriteBackMutableSlice.swift
   )
 
