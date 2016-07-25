@@ -1159,7 +1159,7 @@ extension Sequence where
     while predicate: @noescape (Iterator.Element) throws -> Bool
   ) rethrows -> AnySequence<Iterator.Element> {
     var iterator = makeIterator()
-    var nextElement: Iterator.Element? = iterator.next()
+    var nextElement: Iterator.Element?
     repeat {
       nextElement = iterator.next()
     } while try nextElement.flatMap(predicate) == true
