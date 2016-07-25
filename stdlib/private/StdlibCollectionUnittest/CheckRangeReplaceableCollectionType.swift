@@ -471,7 +471,10 @@ extension TestSuite {
     C.Indices.Iterator.Element == C.Index,
     C.Indices.Index == C.Index,
     C.Indices.SubSequence == C.Indices,
-    CollectionWithEquatableElement.Iterator.Element : Equatable {
+    CollectionWithEquatableElement.Iterator.Element : Equatable,
+    CollectionWithEquatableElement.SubSequence : Collection,
+    CollectionWithEquatableElement.SubSequence.Iterator.Element
+      == CollectionWithEquatableElement.Iterator.Element {
 
     var testNamePrefix = testNamePrefix
 
@@ -1181,7 +1184,10 @@ self.test("\(testNamePrefix).OperatorPlus") {
     C.Indices.Iterator.Element == C.Index,
     C.Indices.Index == C.Index,
     C.Indices.SubSequence == C.Indices,
-    CollectionWithEquatableElement.Iterator.Element : Equatable {
+    CollectionWithEquatableElement.Iterator.Element : Equatable,
+    CollectionWithEquatableElement.SubSequence : Collection,
+    CollectionWithEquatableElement.SubSequence.Iterator.Element
+      == CollectionWithEquatableElement.Iterator.Element {
 
     var testNamePrefix = testNamePrefix
 
@@ -1309,7 +1315,10 @@ self.test("\(testNamePrefix).removeLast(n: Int)/whereIndexIsBidirectional/remove
     C.Indices.Iterator.Element == C.Index,
     C.Indices.Index == C.Index,
     C.Indices.SubSequence == C.Indices,
-    CollectionWithEquatableElement.Iterator.Element : Equatable {
+    CollectionWithEquatableElement.Iterator.Element : Equatable,
+    CollectionWithEquatableElement.SubSequence : Collection,
+    CollectionWithEquatableElement.SubSequence.Iterator.Element
+      == CollectionWithEquatableElement.Iterator.Element {
 
     var testNamePrefix = testNamePrefix
 

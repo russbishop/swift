@@ -103,6 +103,9 @@ extension TestSuite {
     C.Indices.Index == C.Index,
     C.Indices.SubSequence == C.Indices,
     CollectionWithEquatableElement.Iterator.Element : Equatable,
+    CollectionWithEquatableElement.SubSequence : Collection,
+    CollectionWithEquatableElement.SubSequence.Iterator.Element
+      == CollectionWithEquatableElement.Iterator.Element,
     CollectionWithComparableElement.Iterator.Element : Comparable {
 
     var testNamePrefix = testNamePrefix
@@ -612,6 +615,9 @@ self.test("\(testNamePrefix).sorted/${'Predicate' if predicate else 'WhereElemen
     C.Indices.Index == C.Index,
     C.Indices.SubSequence == C.Indices,
     CollectionWithEquatableElement.Iterator.Element : Equatable,
+    CollectionWithEquatableElement.SubSequence : Collection,
+    CollectionWithEquatableElement.SubSequence.Iterator.Element
+      == CollectionWithEquatableElement.Iterator.Element,
     CollectionWithComparableElement.Iterator.Element : Comparable {
     
     var testNamePrefix = testNamePrefix
@@ -733,6 +739,9 @@ self.test("\(testNamePrefix).reverse()") {
     C.Indices.Index == C.Index,
     C.Indices.SubSequence == C.Indices,
     CollectionWithEquatableElement.Iterator.Element : Equatable,
+    CollectionWithEquatableElement.SubSequence : Collection,
+    CollectionWithEquatableElement.SubSequence.Iterator.Element
+      == CollectionWithEquatableElement.Iterator.Element,
     CollectionWithComparableElement.Iterator.Element : Comparable,
     CollectionWithComparableElement.SubSequence.Indices.Iterator.Element == CollectionWithComparableElement.Index {
     
