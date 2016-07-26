@@ -183,7 +183,11 @@ public struct ${Self}<
     guard case .index(let i) = i._value else {
       _preconditionFailure("invalid index passed to index(after:)")
     }
-    return LazyPrefixWhileIndex(_base.index(after: i))
+    let nextIndex = _base.index(after: i)
+    guard nextIndex != _base.endIndex && _predicate(_base[nextIndex]) else {
+      return LazyPrefixWhileIndex(endOf: _base)
+    }
+    return LazyPrefixWhileIndex(nextIndex)
   }
 
 %   if Traversal == 'Bidirectional':
@@ -194,14 +198,23 @@ public struct ${Self}<
       _precondition(i != _base.startIndex, "can't move before startIndex")
       return LazyPrefixWhileIndex(_base.index(before: i))
     case .pastEnd:
-      // This is an unfortunate case: We must search forward for the index of
-      // the last element of the collection.
-      var i = _base.startIndex
-      while i != _base.endIndex && _predicate(_base[i]) {
-        _base.formIndex(after: &i)
+      // We must find the position of the last element in a non-empty
+      // prefix(while:) collection by searching forward for a predicate
+      // failure.
+
+      // Safe to assume `_base.startIndex != _base.endIndex`; if they were
+      // equal, `_base.startIndex` would be used as the `endIndex of this
+      // collection.
+      _sanityCheck(!_base.isEmpty)
+      var result = _base.startIndex
+      while true {
+        let next = _base.index(after: result)
+        if next == _base.endIndex || !_predicate(_base[next]) {
+          break
+        }
+        result = next
       }
-      _sanityCheck(i != _base.endIndex)
-      return LazyPrefixWhileIndex(i)
+      return LazyPrefixWhileIndex(result)
     }
   }
 
