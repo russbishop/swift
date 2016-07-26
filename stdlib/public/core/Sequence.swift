@@ -470,14 +470,15 @@ public protocol Sequence {
   ///
   /// - Complexity: O(*n*), where *n* is the length of the sequence.
   func dropLast(_ n: Int) -> SubSequence
-  
 
   /// Returns a subsequence by skipping elements while `predicate` returns
   /// `true` and returning the remaining elements.
   ///
-  /// - Parameter while: A closure that takes an element of the
+  /// - Parameter predicate: A closure that takes an element of the
   ///   sequence as its argument and returns a Boolean value indicating
   ///   whether the element is a match.
+  ///
+  /// - Complexity: O(*n*), where *n* is the length of the collection.
   func drop(
     while predicate: @noescape (Iterator.Element) throws -> Bool
   ) rethrows -> SubSequence
@@ -503,9 +504,11 @@ public protocol Sequence {
   /// Returns a subsequence containing the initial elements until `predicate`
   /// returns `false` and skipping the remaining elements.
   ///
-  /// - Parameter while: A closure that takes an element of the
+  /// - Parameter predicate: A closure that takes an element of the
   ///   sequence as its argument and returns a Boolean value indicating
   ///   whether the element is a match.
+  ///
+  /// - Complexity: O(*n*), where *n* is the length of the collection.
   func prefix(
     while predicate: @noescape (Iterator.Element) throws -> Bool
   ) rethrows -> SubSequence
@@ -1151,10 +1154,12 @@ extension Sequence where
   /// Returns a subsequence by skipping elements while `predicate` returns
   /// `true` and returning the remaining elements.
   ///
-  /// - Parameter while: A closure that takes an element of the
+  /// - Parameter predicate: A closure that takes an element of the
   ///   sequence as its argument and returns `true` if the element should
   ///		be skipped or `false` if it should be included. Once the predicate
   ///		returns `false` it will not be called again.
+  ///
+  /// - Complexity: O(*n*), where *n* is the length of the collection.
   public func drop(
     while predicate: @noescape (Iterator.Element) throws -> Bool
   ) rethrows -> AnySequence<Iterator.Element> {
@@ -1203,10 +1208,12 @@ extension Sequence where
   /// Returns a subsequence containing the initial elements until `predicate`
   /// returns `false` and skipping the remaining elements.
   ///
-  /// - Parameter while: A closure that takes an element of the
+  /// - Parameter predicate: A closure that takes an element of the
   ///   sequence as its argument and returns `true` if the element should
   ///		be included or `false` if it should be excluded. Once the predicate
   ///		returns `false` it will not be called again.
+  ///
+  /// - Complexity: O(*n*), where *n* is the length of the collection.
   public func prefix(
     while predicate: @noescape (Iterator.Element) throws -> Bool
   ) rethrows -> AnySequence<Iterator.Element> {

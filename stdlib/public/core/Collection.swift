@@ -1342,15 +1342,17 @@ extension Collection {
   /// Returns a subsequence by skipping elements while `predicate` returns
   /// `true` and returning the remaining elements.
   ///
-  /// - Parameter while: A closure that takes an element of the
+  /// - Parameter predicate: A closure that takes an element of the
   ///   sequence as its argument and returns `true` if the element should
   ///   be skipped or `false` if it should be included. Once the predicate
   ///   returns `false` it will not be called again.
+  ///
+  /// - Complexity: O(*n*), where *n* is the length of the collection.
   public func drop(
     while predicate: @noescape (Iterator.Element) throws -> Bool
   ) rethrows -> SubSequence {
     var start = startIndex
-    while try start < endIndex && predicate(self[start]) {
+    while try start != endIndex && predicate(self[start]) {
       formIndex(after: &start)
     } 
     return self[start..<endIndex]
@@ -1384,15 +1386,17 @@ extension Collection {
   /// Returns a subsequence containing the initial elements until `predicate`
   /// returns `false` and skipping the remaining elements.
   ///
-  /// - Parameter while: A closure that takes an element of the
+  /// - Parameter predicate: A closure that takes an element of the
   ///   sequence as its argument and returns `true` if the element should
   ///   be included or `false` if it should be excluded. Once the predicate
   ///   returns `false` it will not be called again.
+  ///
+  /// - Complexity: O(*n*), where *n* is the length of the collection.
   public func prefix(
     while predicate: @noescape (Iterator.Element) throws -> Bool
   ) rethrows -> SubSequence {
     var end = startIndex
-    while try end < endIndex && predicate(self[end]) {
+    while try end != endIndex && predicate(self[end]) {
       formIndex(after: &end)
     }
     return self[startIndex..<end]
