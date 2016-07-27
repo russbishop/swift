@@ -1282,18 +1282,18 @@ do {
 //===--- LazyPrefixWhile --------------------------------------------------===//
 
 let prefixDropWhileTests: [(data: [Int], value: Int, pivot: Int)] = [
-    ([],                       0,     0),
-    ([0],                      0,     0),
-    ([0],                     99,     1),
-    ([0, 10],                  0,     0),
-    ([0, 10],                 10,     1),
-    ([0, 10],                 99,     2),
-    ([0, 10, 20, 30, 40],      0,     0),
-    ([0, 10, 20, 30, 40],     10,     1),
-    ([0, 10, 20, 30, 40],     20,     2),
-    ([0, 10, 20, 30, 40],     30,     3),
-    ([0, 10, 20, 30, 40],     40,     4),
-    ([0, 10, 20, 30, 40],     99,     5) ]
+  ([],                       0,     0),
+  ([0],                      0,     0),
+  ([0],                     99,     1),
+  ([0, 10],                  0,     0),
+  ([0, 10],                 10,     1),
+  ([0, 10],                 99,     2),
+  ([0, 10, 20, 30, 40],      0,     0),
+  ([0, 10, 20, 30, 40],     10,     1),
+  ([0, 10, 20, 30, 40],     20,     2),
+  ([0, 10, 20, 30, 40],     30,     3),
+  ([0, 10, 20, 30, 40],     40,     4),
+  ([0, 10, 20, 30, 40],     99,     5) ]
 
 tests.test("LazyPrefixWhileIterator") {
   let base = (1...10).lazy.prefix(while: { $0 < 4 })
@@ -1317,27 +1317,25 @@ tests.test("LazyPrefixWhileIterator") {
 % for Kind in 'Sequence', 'Forward', 'Bidirectional':
 %   Self = 'Sequence' if Kind == 'Sequence' else collectionForTraversal(Kind)
 %   checkKind = 'ForwardCollection' if Kind == 'Forward' else Self
-  tests.test("LazyPrefixWhile${Self}")
-    .forEach(in: prefixDropWhileTests) {
-    (data, value, pivot) in
+tests.test("LazyPrefixWhile${Self}").forEach(in: prefixDropWhileTests) {
+  (data, value, pivot) in
 
-    let base = Minimal${Self}(elements: data)
+  let base = Minimal${Self}(elements: data)
 
-    var calls1 = 0
-    let prefixed = base.lazy.prefix(while: { calls1 += 1; return $0 != value })
-    let expected = data.prefix(upTo: pivot)
-    expectEqual(0, calls1)
-    check${checkKind}(expected, prefixed)
+  var calls1 = 0
+  let prefixed = base.lazy.prefix(while: { calls1 += 1; return $0 != value })
+  let expected = data.prefix(upTo: pivot)
+  expectEqual(0, calls1)
+  check${checkKind}(expected, prefixed)
 
-    var calls2 = 0
-    _ = prefixed.map { _ in calls2 += 1 }
-    expectEqual(0, calls2, "unexpected eagerness in \(prefixed.dynamicType)")
+  var calls2 = 0
+  _ = prefixed.map { _ in calls2 += 1 }
+  expectEqual(0, calls2, "unexpected eagerness in \(prefixed.dynamicType)")
 
   % if Kind == 'Bidirectional':
-    check${checkKind}(expected.reversed(), prefixed.reversed())
+  check${checkKind}(expected.reversed(), prefixed.reversed())
   % end
-
-  }
+}
 % end
 
 tests.test("LazyPrefixWhileSequence/AssociatedTypes") {
@@ -1394,27 +1392,25 @@ tests.test("LazyDropWhileIterator") {
 % for Kind in 'Sequence', 'Forward', 'Bidirectional':
 %   Self = 'Sequence' if Kind == 'Sequence' else collectionForTraversal(Kind)
 %   checkKind = 'ForwardCollection' if Kind == 'Forward' else Self
-  tests.test("LazyDropWhile${Self}")
-    .forEach(in: prefixDropWhileTests) {
-    (data, value, pivot) in
+tests.test("LazyDropWhile${Self}").forEach(in: prefixDropWhileTests) {
+  (data, value, pivot) in
 
-    let base = Minimal${Self}(elements: data)
+  let base = Minimal${Self}(elements: data)
 
-    var calls1 = 0
-    let dropped = base.lazy.drop(while: { calls1 += 1; return $0 != value })
-    let expected = data.suffix(from: pivot)
-    expectEqual(0, calls1)
-    check${checkKind}(expected, dropped)
+  var calls1 = 0
+  let dropped = base.lazy.drop(while: { calls1 += 1; return $0 != value })
+  let expected = data.suffix(from: pivot)
+  expectEqual(0, calls1)
+  check${checkKind}(expected, dropped)
 
-    var calls2 = 0
-    _ = dropped.map { _ in calls2 += 1 }
-    expectEqual(0, calls2, "unexpected eagerness in \(dropped.dynamicType)")
+  var calls2 = 0
+  _ = dropped.map { _ in calls2 += 1 }
+  expectEqual(0, calls2, "unexpected eagerness in \(dropped.dynamicType)")
 
   % if Kind == 'Bidirectional':
-    check${checkKind}(expected.reversed(), dropped.reversed())
+  check${checkKind}(expected.reversed(), dropped.reversed())
   % end
-
-  }
+}
 % end
 
 tests.test("LazyDropWhileSequence/AssociatedTypes") {

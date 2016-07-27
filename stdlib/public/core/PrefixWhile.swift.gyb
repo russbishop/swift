@@ -198,13 +198,13 @@ public struct ${Self}<
       _precondition(i != _base.startIndex, "can't move before startIndex")
       return LazyPrefixWhileIndex(_base.index(before: i))
     case .pastEnd:
-      // We must find the position of the last element in a non-empty
+      // Look for the position of the last element in a non-empty
       // prefix(while:) collection by searching forward for a predicate
       // failure.
 
-      // Safe to assume `_base.startIndex != _base.endIndex`; if they were
-      // equal, `_base.startIndex` would be used as the `endIndex of this
-      // collection.
+      // Safe to assume that `_base.startIndex != _base.endIndex`; if they
+      // were equal, `_base.startIndex` would be used as the `endIndex` of
+      // this collection.
       _sanityCheck(!_base.isEmpty)
       var result = _base.startIndex
       while true {
